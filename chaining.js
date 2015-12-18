@@ -1,23 +1,29 @@
 "use strict";
 
-const ps = [1, 2, 3, 4, 5, 6].map(
+var all = [1, 2, 3, 4, 5, 6];
+
+var ps = all.map(
   n => new Promise(function (resolve, reject) {
-    console.log(`start ${n}`);
+    let elem = document.getElementById('c' + n);
+    elem.setAttribute("style", "fill: red");
     setTimeout(() => {
-      console.log(`resolve ${n}`);
+      elem.setAttribute("style", "fill: blue");
       resolve(n);
-    }, 1000);
+    }, 2000);
   })
 );
 
 for (let i = 0; i < ps.length - 1; i++) {
   ps[i].then((r) => {
-    console.log('then');
     r(ps[i + 1]);
   });
 }
 
-ps[ps.length - 1].then(v => console.log(`done`));
+function start() {
+  ps[ps.length - 1].then(v => {
+    all.forEach(n => document.getElementById('c' + n).setAttribute("style", "fill: black"));
+  });
+}
 
 /*
 .reduce((p, c) => {
