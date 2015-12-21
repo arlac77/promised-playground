@@ -1,27 +1,38 @@
 "use strict";
 
-var all = [1, 2, 3, 4, 5, 6];
 
-var ps = all.map(
-  n => new Promise(function (resolve, reject) {
-    let elem = document.getElementById('c' + n);
-    elem.setAttribute("style", "fill: red");
-    setTimeout(() => {
-      elem.setAttribute("style", "fill: blue");
-      resolve(n);
-    }, 2000);
-  })
-);
+let all = [1, 2, 3, 4, 5, 6];
 
-for (let i = 0; i < ps.length - 1; i++) {
-  ps[i].then((r) => {
-    r(ps[i + 1]);
-  });
+
+initialize('yellow');
+
+function initialize(color) {
+  const elem = document.getElementById('sample1');
+  elem.innerHTML = all.map(i => `<circle id="c${i}" cx="80" cy="${i*25}" r="10" style="fill: ${color}"/>`).join('');
 }
 
 function start() {
+  initialize('black');
+
+  var ps = all.map(
+    n => new Promise(function (fulfill, reject) {
+      const elem = document.getElementById('c' + n);
+      elem.setAttribute("style", "fill: red");
+      setTimeout(() => {
+        elem.setAttribute("style", "fill: blue");
+        fulfill(n);
+      }, 3000);
+    })
+  );
+
+  for (let i = 0; i < ps.length - 1; i++) {
+    ps[i].then(r => {
+      r(ps[i + 1]);
+    });
+  }
+
   ps[ps.length - 1].then(v => {
-    all.forEach(n => document.getElementById('c' + n).setAttribute("style", "fill: black"));
+    initialize('black');
   });
 }
 
