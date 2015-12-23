@@ -1,14 +1,21 @@
 "use strict";
 
 
-var all = [1, 2, 3, 4, 5, 6];
+var all = [1, 2, 3];
 
 
 initialize('yellow');
 
 function initialize(color) {
   const elem = document.getElementById('sample1');
-  elem.innerHTML = all.map(i => `<circle id="c${i}" cx="80" cy="${i*25}" r="10" style="fill: ${color}"/>`).join('');
+  elem.innerHTML = all.map(i =>
+    `<circle id="c${i}" cx="80" cy="${i*25}" r="10" style="fill: ${color}"><animateMotion dur="12s" values="80,${i*25};400,${i*25}"/></circle>`
+  ).join('');
+}
+
+function setState(elem, color, position) {
+  elem.setAttribute("cx", position);
+  elem.setAttribute("style", `fill: ${color}`);
 }
 
 
@@ -27,7 +34,7 @@ function start() {
     n => {
       const elem = document.getElementById('c' + n);
       return delayPromise(n, 3000).then(function (f) {
-        elem.setAttribute("style", "fill: blue");
+        setState(elem, 'blue', 80);
         return f;
       })
     }
